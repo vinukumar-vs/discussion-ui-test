@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { APP_BASE_HREF } from '@angular/common'
 import { retry } from 'rxjs/operators'
 import { HttpClient } from '@angular/common/http'
@@ -20,7 +21,6 @@ import {
   NsUser,
   UserPreferenceService,
 } from '@ws-widget/utils'
-import { environment } from '../../../../../../../discussions-UI/igot-discuss/src/environments/environment'
 
 interface IDetailsResponse {
   tncStatus: boolean

@@ -6,7 +6,7 @@ import { DiscussStartComponent } from '../../components/discuss-start/discuss-st
 import { ActivatedRoute, Router } from '@angular/router'
 import { DiscussService } from '../../services/discuss.service'
 /* tslint:disable */
-import _ from 'lodash'
+import * as _ from 'lodash'
 /* tslint:enable */
 
 @Component({
@@ -35,11 +35,11 @@ export class DiscussAllComponent implements OnInit, AfterViewInit {
     private discussService: DiscussService,
     private router: Router
   ) {
-    this.trendingTags = this.route.snapshot.data.availableTags.data.tags
-    this.discussionList = this.route.snapshot.data.recent.data.topics || []
-    this.paginationData = this.route.snapshot.data.recent.data.pagination
-    this.setPagination()
-    this.unread = this.route.snapshot.data.unread
+    this.trendingTags = _.get(this.route.snapshot.data.availableTags.data, 'tags') || [];
+    this.discussionList = _.get(this.route.snapshot.data.recent.data, 'topics') || [];
+    this.paginationData = _.get(this.route.snapshot.data.recent.data, 'pagination') || [];
+    // this.setPagination();
+    // this.unread = this.route.snapshot.data.unread
   }
   ngAfterViewInit(): void {
     // throw new Error('Method not implemented.')

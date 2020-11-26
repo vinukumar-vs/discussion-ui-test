@@ -11,7 +11,7 @@ const API_ENDPOINTS = {
   votePost: (pid: number) => `apis/discussionHub/writeApi/v2/posts/${pid}/vote`,
   replyPost: (tid: number) => `apis/discussionHub/writeApi/v2/topics/${tid}`,
   bookmarkPost: (pid: number) => `apis/discussionHub/writeApi/v2/posts/${pid}/bookmark`,
-  recentPost: '/apis/discussionHub/topics/recent',
+  recentPost: '/apis/discussionHub/recent',
   popularPost: '/apis/discussionHub/topics/popular',
   unread: '/apis/discussionHub/topics/unread/total',
   getTopic: '/apis/discussionHub/topics/',
@@ -97,8 +97,8 @@ export class DiscussService {
   }
 
   fetchRecentD(page?: any) {
-    const url = this.appendPage(page, API_ENDPOINTS.recentPost)
-    return this.http.get<NSDiscussData.IDiscussionData>(url)
+    // const url = this.appendPage(page, API_ENDPOINTS.recentPost)
+    return this.http.get<NSDiscussData.IDiscussionData>(API_ENDPOINTS.recentPost);
   }
   fetchPopularD(page?: any) {
     const url = this.appendPage(page, API_ENDPOINTS.popularPost)
