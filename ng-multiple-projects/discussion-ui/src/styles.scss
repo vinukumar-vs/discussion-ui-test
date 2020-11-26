@@ -1,0 +1,14 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'ws-vars';
+@import 'ws-mixins';
+@import './utility.scss';
+
+html,
+body {
+  margin: 0px;
+  font-family: $font-family-lato;
+  scroll-behavior: smooth;
+  // letter-spacing: $letter-spacing;
+  // word-spacing: $word-spacing;
+}
