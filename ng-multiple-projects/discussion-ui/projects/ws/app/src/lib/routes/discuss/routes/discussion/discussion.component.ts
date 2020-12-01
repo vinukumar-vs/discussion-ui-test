@@ -8,6 +8,7 @@ import { FormGroup, FormBuilder } from '@angular/forms'
 import { DiscussService } from '../../services/discuss.service'
 import { MatSnackBar } from '@angular/material'
 import { DiscussUtilsService } from '../../services/discuss-utils.service'
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-discuss-discussion',
@@ -32,6 +33,7 @@ export class DiscussionComponent implements OnInit, OnDestroy, AfterViewInit {
   paginationData!: any
   currentActivePage!: any
   fetchNewData = false
+  slug: string;
   constructor(
     private formBuilder: FormBuilder,
     // private loader: LoaderService,
@@ -45,14 +47,17 @@ export class DiscussionComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.data = this.route.snapshot.data.topic.data
-      this.paginationData = this.route.snapshot.data.topic.data.pagination
-      this.setPagination()
-      this.topicId = params.topicId
+      console.log(params);
+      this.data = _.get(this.route.snapshot.data.topic, 'data') || [ ];
+      this.paginationData = _.get(this.route.snapshot.data.topic.data, 'pagination') || [ ];
+      // this.setPagination()
+      this.topicId = _.get(params, 'topicId');
+      this.slug = _.get(params, 'slug');
       if (this.data.posts && this.data.posts.length && this.data.posts[0].tid !== Number(this.topicId)) {
-        this.getTIDData(this.currentActivePage)
+        console.log('calling 1');
+        this.getTIDData(this.currentActivePage);
       }
-    })
+    });
     this.route.queryParams.subscribe(x => {
       if (x.page) {
         this.currentActivePage = x.page || 1
@@ -62,7 +67,7 @@ export class DiscussionComponent implements OnInit, OnDestroy, AfterViewInit {
     this.postAnswerForm = this.formBuilder.group({
       answer: [],
     })
-    this.fetchSingleCategoryDetails(this.data.cid)
+    // this.fetchSingleCategoryDetails(this.data.cid)
   }
   ngAfterViewInit() {
     this.ref.detach()
@@ -202,7 +207,8 @@ export class DiscussionComponent implements OnInit, OnDestroy, AfterViewInit {
 
   refreshPostData(page: any) {
     if (this.currentFilter === 'timestamp') {
-      this.discussService.fetchTopicById(this.topicId, page).subscribe(
+      console.log(this.slug);
+      this.discussService.fetchTopicById(this.topicId, page, this.slug).subscribe(
         (data: NSDiscussData.IDiscussionData) => {
           this.data = data
           this.paginationData = data.pagination
@@ -238,11 +244,12 @@ export class DiscussionComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getTIDData(page: any) {
-    this.discussService.fetchTopicById(this.topicId, page).subscribe(
+    console.log(this.slug, this.topicId, page);
+    this.discussService.fetchTopicById(this.topicId, page, this.slug).subscribe(
       (data: NSDiscussData.IDiscussionData) => {
-        this.data = data
-        this.paginationData = data.pagination
-        this.setPagination()
+        this.data = data;
+        this.paginationData = data.pagination;
+        this.setPagination();
       },
       (err: any) => {
         this.openSnackbar(err.error.message.split('|')[1] || this.defaultError)

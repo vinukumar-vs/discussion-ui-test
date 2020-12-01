@@ -8,13 +8,13 @@ const API_ENDPOINTS = {
   getSingleCategoryDetails: (cid: number) => `/apis/discussionHub/categories/${cid}`,
   getAllTags: '/apis/discussionHub/tags',
   createPost: '/apis/discussionHub/writeApi/v2/topics',
-  votePost: (pid: number) => `apis/discussionHub/writeApi/v2/posts/${pid}/vote`,
-  replyPost: (tid: number) => `apis/discussionHub/writeApi/v2/topics/${tid}`,
+  votePost: (pid: number) => `apis/discussionHub/v2/posts/${pid}/vote`,
+  replyPost: (tid: number) => `apis/discussionHub/v2/topics/${tid}`,
   bookmarkPost: (pid: number) => `apis/discussionHub/writeApi/v2/posts/${pid}/bookmark`,
   recentPost: '/apis/discussionHub/recent',
-  popularPost: '/apis/discussionHub/topics/popular',
+  popularPost: '/apis/discussionHub/popular',
   unread: '/apis/discussionHub/topics/unread/total',
-  getTopic: '/apis/discussionHub/topics/',
+  getTopic: '/apis/discussionHub/topic',
   profile: '/apis/discussionHub/users/me',
   fetchProfile: (slug: string) => `/apis/discussionHub/users/${slug}/about`,
   listUpVote: (slug: string) => `/apis//discussionHub/users/${slug}/upvoted`,
@@ -72,13 +72,13 @@ export class DiscussService {
   }
 
   votePost(pid: number, data: any) {
-    const url = API_ENDPOINTS.votePost(pid)
-    return this.http.post(url, data)
+    const url = API_ENDPOINTS.votePost(pid);
+    return this.http.post(url, data);
   }
 
   deleteVotePost(pid: number) {
-    const url = API_ENDPOINTS.votePost(pid)
-    return this.http.delete(url)
+    const url = API_ENDPOINTS.votePost(pid);
+    return this.http.delete(url);
   }
 
   bookmarkPost(pid: number) {
@@ -101,17 +101,20 @@ export class DiscussService {
     return this.http.get<NSDiscussData.IDiscussionData>(API_ENDPOINTS.recentPost);
   }
   fetchPopularD(page?: any) {
-    const url = this.appendPage(page, API_ENDPOINTS.popularPost)
-    return this.http.get<NSDiscussData.IDiscussionData>(url)
+    // const url = this.appendPage(page, API_ENDPOINTS.popularPost)
+    return this.http.get<NSDiscussData.IDiscussionData>(API_ENDPOINTS.popularPost)
   }
 
-  fetchTopicById(topicId: number, page?: any) {
-    let url = API_ENDPOINTS.getTopic + topicId.toString()
-    url = this.appendPage(page, url)
-    return this.http.get<NSDiscussData.IDiscussionData>(url)
+  fetchTopicById(topicId: number, page?: any, slug?: any) {
+    console.log('called this', slug);
+    let url = API_ENDPOINTS.getTopic + '/' + topicId.toString() + '/' + slug;
+    url = this.appendPage(page, url);
+    return this.http.get<NSDiscussData.IDiscussionData>(url);
   }
 
   fetchTopicByIdSort(topicId: number, sort: any, page?: any) {
+    console.log('called that');
+
     let url = API_ENDPOINTS.getTopic + topicId.toString()
     url = this.appendPage(page, url)
     return this.http.get<NSDiscussData.IDiscussionData>(`${url}&sort=${sort}`)
