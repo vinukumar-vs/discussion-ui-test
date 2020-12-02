@@ -38,7 +38,7 @@ export class DiscussCardComponent implements OnInit {
     }
   }
   getDiscussion() {
-    this.router.navigate([`/discuss/home/${this.discuss.tid}/${_.get(this.discuss, 'category.name')}`]);
+    this.router.navigate([`/discuss/home/${_.get(this.discuss, 'category.slug')}`]);
   }
 
   public getBgColor(tagTitle: any) {
